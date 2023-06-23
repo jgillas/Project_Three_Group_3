@@ -5,6 +5,7 @@ import os
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from datetime import datetime as dt
+import numpy as np
 
 engine_sqlite = create_engine('sqlite:///teen_births.sqlite')
 Base = automap_base()
@@ -74,19 +75,14 @@ def Start_end_year(start_year, end_year):
 def Start_year(start_year): 
 
     year_start = session.query(func.min(birth_rates.columns.state_births),func.max(birth_rates.columns.state_births),birth_rates.columns.state, birth_rates.columns.year).\
-        group_by(birth_rates.columns.year, birth_rates.columns.state).filter(birth_rates.columns.year >= start_year).all()
+        group_by(birth_rates.columns.year, birth_rates.columns.state).filter(birth_rates.columns.year >= start_year).filter(birth_rates.columns.year <= start_year).all()
 
-    
     session.close()
     
+    temps = list(np.ravel(year_start))
+    return jsonify(temps)
+    
     start_year_births = []
-    for state_births, state_births, state, year in year_start:
-        start_year_births_dict = {}
-        start_year_births_dict ["Min"] = state_births
-        start_year_births_dict ["Max"] = state_births
-        start_year_births_dict ["state"] = state
-        start_year_births_dict ["year"] = year
-        start_year_births.append(start_year_births_dict)
     
     return jsonify(start_year_births)
 
