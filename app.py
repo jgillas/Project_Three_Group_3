@@ -24,68 +24,69 @@ def welcome():
   return (
     f"Welcome to the Homepage for Teen Births in the U.S. Analysis. The avaliable routes are listed below.<br/>"
     f"Teen Births Based on Age Group<br/>"
-    f"/api/v1.0/agegroups<br/>"
+    f"/api/v1.0/state<br/>"
     f"Average Teen Births Per Year<br/>"
     f"/api/v1.0/[start_year format:yyyy]/[end_year format:yyyy]<br/>"
     f"Teen Birth Info By Year<br/>"
     f"/api/v1.0/[start_year format:yyyy]<br/>"
   )
 
-@app.route("/api/v1.0/agegroups")
-def age_groups():
-  results = session.query(birth_rates.age_group, birth_rates.state_rate).all()
+@app.route("/api/v1.0/state")
+def state():
+    
+  results = session.query(birth_rates.columns.state_rate, birth_rates.columns.state, birth_rates.columns.year).\
+      filter(birth_rates.columns.year).all()
   
   session.close()
   
   all_age_groups = []
-  for age_group, state_rate in results:
+  for state_rate, state, year in results:
       age_group_dict = {}
-      age_group_dict["15-17 years"] = age_group
-      age_group_dict["15-19 years"] = age_group
-      age_group_dict["18-19 years"] = age_group
       age_group_dict["state rate"] = state_rate
+      age_group_dict["state"] = state
+      age_group_dict["year"] = year
       all_age_groups.append(age_group_dict)
-      
-      return jsonify(all_age_groups)
+  
+  return jsonify(all_age_groups)
   
   
-@app.route("/api/v1.0/<start_year>/<end_year>")
+@app.route("/api/v1.0/<int:start_year>/<int:end_year>")
 def Start_end_year(start_year, end_year):
+
+    start_end_births = session.query(func.avg(birth_rates.columns.state_births),birth_rates.columns.state, birth_rates.columns.year).\
+        group_by(birth_rates.columns.year, birth_rates.columns.state).filter(birth_rates.columns.year >= start_year).filter(birth_rates.columns.year <= end_year).all()
     
-    start_year= dt.strptime(start_year, '%YYYY-%mm-%dd')
-    end_year = dt.strptime(end_year, '%YYYY-%mm-%dd')
-    
-    start_end_births = session.query(func.avg(birth_rates.state_births)).\
-        filter(birth_rates.year >= start_year).filter(birth_rates.year <= end_year).all()
-    
-    results = start_end_births[0]
     
     session.close()
     
+
     start_end_births_state = []
-    start_end_births_state_dict = {}
-    start_end_births_state_dict ["Avg"] = results[0]
-    start_end_births_state.append(start_end_births_state_dict)
+    for state_births, state, year in start_end_births:
+        start_end_births_state_dict = {}
+        start_end_births_state_dict ["Avg"] = state_births
+        start_end_births_state_dict ["state"] = state
+        start_end_births_state_dict ["year"] = year
+        start_end_births_state.append(start_end_births_state_dict)
     
     return jsonify(start_end_births_state)
 
-@app.route("/api/v1.0/<start_year>")
+@app.route("/api/v1.0/<int:start_year>")
 def Start_year(start_year): 
-    
-    start_year = dt.strptime(start_year, '%YYYY-%mm-%dd')
-    
-    year_start = session.query(func.min(birth_rates.state_births), func.max(birth_rates.state_births)).\
-        filter(birth_rates.year >= start_year).all()
-        
-    results = year_start[0]
+
+    year_start = session.query(func.min(birth_rates.columns.state_births),func.max(birth_rates.columns.state_births),birth_rates.columns.state, birth_rates.columns.year).\
+        group_by(birth_rates.columns.year, birth_rates.columns.state).filter(birth_rates.columns.year >= start_year).all()
+
     
     session.close()
     
     start_year_births = []
-    start_year_births_dict = {}
-    start_year_births_dict ["Min"] = results[0]
-    start_year_births_dict ["Max"] = results[1]
-    start_year_births.append(start_year_births_dict)
+    for state_births, state_births, state, year in year_start:
+        start_year_births_dict = {}
+        start_year_births_dict ["Min"] = state_births
+        start_year_births_dict ["Max"] = state_births
+        start_year_births_dict ["state"] = state
+        start_year_births_dict ["year"] = year
+        start_year_births.append(start_year_births_dict)
     
     return jsonify(start_year_births)
 
