@@ -33,16 +33,16 @@ def welcome():
 
 @app.route("/api/v1.0/agegroups")
 def age_groups():
-  results = session.query(birth_rates.age_groups, birth_rates.state_rate).all()
+  results = session.query(birth_rates.age_group, birth_rates.state_rate).all()
   
   session.close()
   
   all_age_groups = []
-  for age_groups, state_rate in results:
+  for age_group, state_rate in results:
       age_group_dict = {}
-      age_group_dict["15-17 years"] = age_groups
-      age_group_dict["15-19 years"] = age_groups
-      age_group_dict["18-19 years"] = age_groups
+      age_group_dict["15-17 years"] = age_group
+      age_group_dict["15-19 years"] = age_group
+      age_group_dict["18-19 years"] = age_group
       age_group_dict["state rate"] = state_rate
       all_age_groups.append(age_group_dict)
       
@@ -52,8 +52,8 @@ def age_groups():
 @app.route("/api/v1.0/<start_year>/<end_year>")
 def Start_end_year(start_year, end_year):
     
-    start_year= dt.strptime(start_year, '%YYYY')
-    end_year = dt.strptime(end_year, '%YYYY')
+    start_year= dt.strptime(start_year, '%YYYY-%mm-%dd')
+    end_year = dt.strptime(end_year, '%YYYY-%mm-%dd')
     
     start_end_births = session.query(func.avg(birth_rates.state_births)).\
         filter(birth_rates.year >= start_year).filter(birth_rates.year <= end_year).all()
@@ -72,7 +72,7 @@ def Start_end_year(start_year, end_year):
 @app.route("/api/v1.0/<start_year>")
 def Start_year(start_year): 
     
-    start_year = dt.strptime(start_year, '%Y')
+    start_year = dt.strptime(start_year, '%YYYY-%mm-%dd')
     
     year_start = session.query(func.min(birth_rates.state_births), func.max(birth_rates.state_births)).\
         filter(birth_rates.year >= start_year).all()
