@@ -24,11 +24,11 @@ app = Flask(__name__)
 def welcome():
   return (
     f"Welcome to the Homepage for Teen Births in the U.S. Analysis. The avaliable routes are listed below.<br/>"
-    f"Teen Births Based on Age Group<br/>"
+    f"Teen Birth State Rates per Year<br/>"
     f"/api/v1.0/state<br/>"
-    f"Average Teen Births Per Year<br/>"
+    f"Average State Births Per Year Span<br/>"
     f"/api/v1.0/[start_year format:yyyy]/[end_year format:yyyy]<br/>"
-    f"Teen Birth Info By Year<br/>"
+    f"Minimum and Maximum State Births for a Given Year<br/>"
     f"/api/v1.0/[start_year format:yyyy]<br/>"
   )
 
