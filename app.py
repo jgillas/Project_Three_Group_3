@@ -87,5 +87,5 @@ def Start_year(start_year):
     return jsonify(start_year_births)
 
 if __name__ == '__main__':
-  app.run(debug=True)
+  app.run(debug=False)
 
