@@ -3,32 +3,3 @@
   height: 100vh;
   position: absolute;
 }
-
-body {
-  height:100%; 
-  width:100%; 
-  margin:0; 
-  padding:0;
-  overflow: hidden;
-}
-
-#yearSelect {
-  position: absolute;
-  z-index: 1000;
-  bottom: 20px; 
-  left: 20px; 
-}
-
-.label {
-  font-size: 14px;
-  color: black;
-}
-
-.custom-tooltip {
-  font-size: 14px;
-  font-weight: bold;
-  color: black;
-  background-color: white;
-  border: 1px solid black;
-  padding: 6px;
-}

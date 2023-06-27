@@ -52,99 +52,86 @@ let stateCoords = [
   { state: 'Wyoming', lat: 42.755966, lon: -107.302490 }
 ];
 
-// Dictionary of states and coordinates
 let stateDict = stateCoords.reduce((acc, stateObj) => {
   acc[stateObj.state] = { lat: stateObj.lat, lon: stateObj.lon };
   return acc;
 }, {});
 
-// Get the data
-fetch("https://data.cdc.gov/resource/y268-sna3.json")
-  .then(response => response.json())
-  .then(data => {
-    // Create a dictionary of years, states, and data_values
-    let birthDict = {};
-    data.forEach(stateObj => {
-      let year = stateObj.year;
-      let state = stateObj.state;
-      let births = parseInt(stateObj.data_value);
+console.log(stateDict);
 
-      if (!birthDict[year]) {
-        birthDict[year] = {};
+//   var myMap = L.map("map", {
+//     center: [37.0902, -95.7129],
+//     zoom: 5
+//   });
+
+// Adding the tile layer
+//   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+//     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+//   }).addTo(myMap);
+
+
+var baseLayer = L.tileLayer(
+  'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    attribution: '...'
+  }
+);
+
+var cfg = {
+  radius: 20,
+  maxOpacity: .8,
+  latField: 'x',
+  lngField: 'y',
+  valueField: 'data',  
+  blur: 35
+};
+const url = "https://data.cdc.gov/resource/y268-sna3.json";
+
+var heatArray = [];
+
+d3.json(url).then(function(response) {
+  console.log(response);
+
+  for (var i = 0; i < 52; i++) {
+      var resp = response[i];
+      if (resp.state in stateDict){
+          var lat = stateDict[resp.state].lat;
+          var lon = stateDict[resp.state].lon;
+      
+          // Add the lat/lon coordinates to the heatArray
+          console.log(resp.state);
+          console.log(stateDict[resp.state].lon);
+          heatArray.push({x:lon, y:lat, data:resp.state_births});
       }
-      birthDict[year][state] = births;
-    });
+  }});
 
-    // Get the GeoJSON for the states
-    fetch("us-states.json")
-      .then(response => response.json())
-      .then(statesData => {
-        // Define a color scale
-        let getColor = d3.scaleSequential()
-          .domain([0, d3.max(Object.values(birthDict).flatMap(year => Object.values(year)))])  // Domain between 0 and max value of births
-          .interpolator(d3.interpolateOrRd);  // Use the Red-orange color scheme
 
-        // Function to set the color of a state and bind tooltip
-        function style(feature) {
-          let selectedYear = yearSelect.value;
-          let birthCount = birthDict[selectedYear][feature.properties.name];
-          return {
-            fillColor: birthCount ? getColor(birthCount) : "#fff",  // if birthCount is undefined, fill color will be white
-            weight: 2,
-            opacity: 1,
-            color: 'white',
-            fillOpacity: 0.7
-          };
-        }
+console.log(heatArray);
+var testData = {
+  max: 5000,
+  data: heatArray 
+};
 
-        function onEachFeature(feature, layer) {
-          // does this feature have a property named name?
-          if (feature.properties && feature.properties.name) {
-            let selectedYear = yearSelect.value;
-            let birthCount = birthDict[selectedYear][feature.properties.name];
-            layer.bindTooltip("Births in " + feature.properties.name + " in " + selectedYear + ": " + (birthCount || 'No data'), { permanent: true, direction: 'center', className: 'custom-tooltip' }).openTooltip();
-          }
-        }
+var heatmapLayer = new L.heatLayer(testData, cfg);
 
-        // Define the map
-        let map = L.map('map').setView([37.8, -96], 4);
+var myMap = new L.Map('map', {
+  center: new L.LatLng(37.0902, -95.7129),
+  zoom: 4,
+  layers: [baseLayer, heatmapLayer]
+});
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
-          maxZoom: 18
-        }).addTo(map);
+//   heatmapLayer.setData(testData);
+  // Create a heatmap layer using the heatArray
+//     var heat = L.heatLayer(heatArray, {
+//       radius: 20,
+//       latField: 'x',
+//       lngField: 'y',
+//       valueField: 'data',  
+//       blur: 35
+//     }).addTo(myMap);
+//   });
 
-        // Add the states to the map
-        let statesLayer;
-        let mapLayers = {};
 
-        // Function to update the map with selected year's states layer
-        function updateMap(year) {
-          let selectedYear = year || yearSelect.value;
-
-          if (!mapLayers[selectedYear]) {
-            statesLayer = L.geoJson(statesData, { style: style, onEachFeature: onEachFeature });
-            mapLayers[selectedYear] = statesLayer;
-          } else {
-            statesLayer = mapLayers[selectedYear];
-          }
-
-          map.eachLayer(function (layer) {
-            if (layer !== tileLayer) {
-              map.removeLayer(layer);
-            }
-          });
-
-          tileLayer.addTo(map);
-          statesLayer.addTo(map);
-        }
-
-        // Update map when year selection changes
-        yearSelect.addEventListener('change', () => {
-          updateMap();
-        });
-
-        // Initial map update
-        updateMap();
-      });
-  });
+//var heat = L.heatLayer(stateArray, {
+//  radius: 20,
+//  blur: 35
+//}).addTo(myMap);
