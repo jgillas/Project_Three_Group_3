@@ -1,31 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html style="height:100%; width:100%; margin:0; padding:0;">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Teen Pregnancy</title>
-    
-    <!-- Leaflet JavaScript code -->
-    <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js" integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q==" crossorigin=""></script>
+  <meta charset="UTF-8">
+  <title>Teen Pregnancy</title>
 
-    <!-- Leaflet heatmap plugin-->
-    <script type="text/javascript" src="static/js/leaflet-heat.js"></script>
+  <!-- Leaflet JavaScript code -->
+  <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js" integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q==" crossorigin=""></script>
 
-    <!-- D3 library -->
-    <script src="https://d3js.org/d3.v5.min.js"></script>
+  <!-- Leaflet heatmap plugin-->
+  <script type="text/javascript" src="https://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script>
 
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin="" />
+  <!-- D3 library -->
+  <script src="https://d3js.org/d3.v5.min.js"></script>
 
-    <!-- Our CSS  -->
-    <link rel="stylesheet" href="./static/css/style.css" />
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin="" />
 
-</head>
+  <!-- Our CSS  -->
+  <link rel="stylesheet" href="./static/css/style.css" />
+
 <body>
-<p></p>
+  <!-- Add a dropdown to select the year -->
+  <div>
+    <select id="yearSelect">
+        <option value="2019">1990</option>
+        <option value="2018">1991</option>
+        <option value="2017">1992</option>
+        <option value="2016">1993</option>
+        <option value="2015">1994</option>
+        <option value="2014">1995</option>
+        <option value="2013">1996</option>
+        <option value="2012">1997</option>
+        <option value="2011">1998</option>
+        <option value="2010">1999</option>
+        <option value="2009">2000</option>
+        <option value="2008">2001</option>
+        <option value="2007">2002</option>
+        <option value="2006">2003</option>
+        <option value="2005">2004</option>
+        <option value="2004">2005</option>
+        <option value="2003">2006</option>
+        <option value="2002">2007</option>
+        <option value="2001">2008</option>
+        <option value="2000">2009</option>
+      <!-- Add options for other years -->
+    </select>
+  </div>
 
-<div id="map"></div>
+  <div id="map"></div>
 
-<script src="static/js/logic.js"></script>
+  <script src="static/js/logic.js"></script>
 </body>
+
 </html>
