@@ -1,3 +1,36 @@
+
+function init() {
+  let dropDownMenu = d3.select("#selDataset");
+
+  let years = Array.from({length: 30}, (_, i) => 1990 + i); 
+
+  years.forEach((year) => {
+      dropDownMenu.append("option")
+          .text(year)
+          .property("value", year);
+  });
+
+  let sample_one = years[0];
+  console.log(sample_one);
+  buildBarChart(sample_one);
+  buildBubbleChart(sample_one);
+
+  dropDownMenu.on("change", function() {
+      var selectedYear = d3.select(this).property("value");
+      updateData(selectedYear);
+  });
+};
+
+function updateData(year) {
+  d3.json(url).then((data) => {
+      var filteredData = data.filter(d => d.year === year);
+      console.log(filteredData);
+
+      buildBarChart(filteredData);
+      buildBubbleChart(filteredData);
+  });
+}
+
 let stateCoords = [
   { state: 'Alabama', lat: 32.806671, lon: -86.791130 },
   { state: 'Alaska', lat: 61.370716, lon: -152.404419 },
@@ -111,7 +144,7 @@ var testData = {
   data: heatArray 
 };
 
-var heatmapLayer = new L.heatLayer(testData, cfg);
+var heatmapLayer = new HeatmapOverlay(cfg);
 
 var myMap = new L.Map('map', {
   center: new L.LatLng(37.0902, -95.7129),

@@ -10,6 +10,8 @@
 
     <!-- Leaflet heatmap plugin-->
     <script type="text/javascript" src="static/js/leaflet-heat.js"></script>
+    <script src="node_modules/heatmap.js/build/heatmap.js"></script>
+    <script src="node_modules/heatmap.js/plugins/leaflet-heatmap/leaflet-heatmap.js"></script>
 
     <!-- D3 library -->
     <script src="https://d3js.org/d3.v5.min.js"></script>
@@ -23,6 +25,11 @@
 </head>
 <body>
 <p></p>
+
+<!-- Dropdown menu -->
+<div id="dropdown">
+    <select id="selDataset"></select>
+</div>
 
 <div id="map"></div>
 
