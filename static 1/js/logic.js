@@ -1,3 +1,16 @@
+const url = "https://data.cdc.gov/resource/y268-sna3.json";
+
+d3.json(url).then(function(data) {
+  console.log(data);
+});
+
+function buildBarChart(year){
+  // Add your Bar Chart building code here
+}
+
+function buildBubbleChart(year){
+  // Add your Bubble Chart building code here
+}
 
 function init() {
   let dropDownMenu = d3.select("#selDataset");
@@ -109,16 +122,6 @@ var baseLayer = L.tileLayer(
   }
 );
 
-var cfg = {
-  radius: 20,
-  maxOpacity: .8,
-  latField: 'x',
-  lngField: 'y',
-  valueField: 'data',  
-  blur: 35
-};
-const url = "https://data.cdc.gov/resource/y268-sna3.json";
-
 var heatArray = [];
 
 d3.json(url).then(function(response) {
@@ -137,11 +140,27 @@ d3.json(url).then(function(response) {
       }
   }});
 
+console.log("heatArray:")
 
 console.log(heatArray);
 var testData = {
   max: 5000,
   data: heatArray 
+};
+
+var testData2 = {
+  max: 8,
+  data: [{lat: 24.6408, lng:46.7728, count: 3},{lat: 50.75, lng:-1.55, count: 1}]
+};
+
+var cfg = {
+  radius: 2,
+  maxOpacity: 1,
+  latField: 'lat',
+  lngField: 'lng',
+  valueField: 'count',  
+  blur: 35,
+  scaleRadius: true,
 };
 
 var heatmapLayer = new HeatmapOverlay(cfg);
@@ -152,7 +171,7 @@ var myMap = new L.Map('map', {
   layers: [baseLayer, heatmapLayer]
 });
 
-//   heatmapLayer.setData(testData);
+heatmapLayer.setData(testData2);
   // Create a heatmap layer using the heatArray
 //     var heat = L.heatLayer(heatArray, {
 //       radius: 20,
