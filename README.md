@@ -20,3 +20,5 @@ Sources:
 - https://www.plannedparenthood.org/uploads/filer_public/56/25/5625151f-3aac-4fcb-a861-1ab8ddb64a48/pregnancychildbearing_070814.pdf
 - https://opa.hhs.gov/adolescent-health/reproductive-health-and-teen-pregnancy/trends-teen-pregnancy-and-childbearing#:~:text=According%20to%20recent%20research%2C%20this,of%20effective%20contraceptives%20by%20adolescents.&text=The%20declines%20in%20national%20teen,as%20well%20as%20abortion%20rates
 - https://opa.hhs.gov/grant-programs/teen-pregnancy-prevention-program/about-tpp
+
+For our deployment, this is the link: jgillas.github.io/Project_Three_Group_3. The link is currently tring to deploy and hopefuly it will deploy shortly.
